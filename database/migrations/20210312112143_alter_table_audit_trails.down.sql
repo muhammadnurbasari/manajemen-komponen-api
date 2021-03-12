@@ -1,0 +1,1 @@
+ALTER TABLE audit_trails CHANGE COLUMN user_id users_id INT NOT NULL;

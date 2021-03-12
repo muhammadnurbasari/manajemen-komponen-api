@@ -114,7 +114,6 @@ func CreateNewMigrationFile(filePath, fileName string) error {
 	currentTimeFilePrefix := strconv.Itoa(currentYear) + currentMonth + currentDay +
 		currentHour + currentMinute + currentSec
 
-	fmt.Println(currentHour + currentMinute + currentSec)
 	migrationUpFullPath := filePath + "/" +
 		currentTimeFilePrefix + "_" + fileName + ".up.sql"
 	err := ioutil.WriteFile(migrationUpFullPath, []byte(""), 0644)
@@ -129,6 +128,9 @@ func CreateNewMigrationFile(filePath, fileName string) error {
 		return errors.New("Migrate.CreateNewMigrationFile err : " + err.Error())
 	}
 
+	fmt.Println("Migration File has been Created on dir database/migrations")
+	fmt.Println(currentTimeFilePrefix + "_" + fileName + ".up.sql")
+	fmt.Println(currentTimeFilePrefix + "_" + fileName + ".down.sql")
 	return nil
 }
 
