@@ -1,7 +1,12 @@
 package main
 
+import (
+	"manajemen-komponen-api/app/registry"
+	"manajemen-komponen-api/docs"
+)
+
 // @title Manajemen Komponen API
-// @version 1.0
+// @version 0.0.1
 // @description This is a Manajemen Komponen server API Documentation.
 // @termsOfService http://swagger.io/terms/
 
@@ -18,5 +23,7 @@ package main
 // @in header
 // @name Authorization
 func main() {
-
+	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	appRegistry := registry.NewAppRegistry()
+	appRegistry.StartServer()
 }

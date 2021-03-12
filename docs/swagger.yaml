@@ -6,7 +6,7 @@ info:
   description: This is a Manajemen Komponen server API Documentation.
   termsOfService: http://swagger.io/terms/
   title: Manajemen Komponen API
-  version: "1.0"
+  version: 0.0.1
 paths: {}
 securityDefinitions:
   ApiKeyAuth:
