@@ -1,4 +1,239 @@
-host: localhost:8080
+definitions:
+  globalDTO.BadRequest:
+    properties:
+      messages:
+        example: MISSING PARAMETERS
+        type: string
+      status:
+        example: 400
+        type: integer
+    type: object
+  globalDTO.ForbiddenRes:
+    properties:
+      messages:
+        example: Invalid Token
+        type: string
+      status:
+        example: 403
+        type: integer
+    type: object
+  globalDTO.InternalServerErr:
+    properties:
+      messages:
+        example: Please Contact admin, Server is Having Error
+        type: string
+      status:
+        example: 500
+        type: integer
+    type: object
+  globalDTO.UnAuthorized:
+    properties:
+      messages:
+        example: unauthorized user
+        type: string
+      status:
+        example: 401
+        type: integer
+    type: object
+  usersDTO.ReqLoginDTO:
+    properties:
+      email:
+        example: xxxxxx@xxxxxx.com
+        type: string
+      password:
+        example: "123456123"
+        type: string
+    type: object
+  usersDTO.ResChangePassword:
+    properties:
+      messages:
+        example: Change Password Success
+        type: string
+      status:
+        example: 200
+        type: integer
+    type: object
+  usersDTO.ResDeleteUserByID:
+    properties:
+      messages:
+        example: User has been Deleted
+        type: string
+      status:
+        example: 200
+        type: integer
+    type: object
+  usersDTO.ResGetAllUsers:
+    properties:
+      messages:
+        example: Success
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/usersModel.ResGetUsers'
+        type: array
+      status:
+        example: 200
+        type: integer
+    type: object
+  usersDTO.ResGetRoleByID:
+    properties:
+      messages:
+        example: Success
+        type: string
+      result:
+        $ref: '#/definitions/usersModel.Roles'
+      status:
+        example: 200
+        type: integer
+    type: object
+  usersDTO.ResGetRoles:
+    properties:
+      messages:
+        example: Success
+        type: string
+      result:
+        items:
+          $ref: '#/definitions/usersModel.Roles'
+        type: array
+      status:
+        example: 200
+        type: integer
+    type: object
+  usersDTO.ResGetUserByID:
+    properties:
+      messages:
+        example: Success
+        type: string
+      result:
+        $ref: '#/definitions/usersModel.ResGetUsers'
+      status:
+        example: 200
+        type: integer
+    type: object
+  usersDTO.ResInsertUser:
+    properties:
+      messages:
+        example: User has been Created
+        type: string
+      status:
+        example: 200
+        type: integer
+      user_id:
+        example: 1
+        type: integer
+    type: object
+  usersDTO.ResLoginResult:
+    properties:
+      messages:
+        example: Login Success
+        type: string
+      result:
+        $ref: '#/definitions/usersModel.ResLogin'
+      status:
+        example: 200
+        type: integer
+    type: object
+  usersDTO.ResUpdateUser:
+    properties:
+      messages:
+        example: User has been Updated
+        type: string
+      status:
+        example: 200
+        type: integer
+    type: object
+  usersModel.ReqChangePassword:
+    properties:
+      new_password:
+        example: "987654321"
+        type: string
+      old_password:
+        example: "123456789"
+        type: string
+    type: object
+  usersModel.ReqInsertUser:
+    properties:
+      email:
+        example: bla@bla.com
+        type: string
+      password:
+        example: your password
+        type: string
+      role_id:
+        example: 1
+        type: integer
+      username:
+        example: your username
+        type: string
+    required:
+    - email
+    - password
+    - role_id
+    - username
+    type: object
+  usersModel.ReqUpdateUser:
+    properties:
+      email:
+        example: bla@bla.com
+        type: string
+      role_id:
+        example: 1
+        type: integer
+      user_id:
+        example: 1
+        type: integer
+      username:
+        example: your username
+        type: string
+    required:
+    - email
+    - role_id
+    - user_id
+    - username
+    type: object
+  usersModel.ResGetUsers:
+    properties:
+      created_at:
+        example: "2021-03-13T07:15:11+07:00"
+        type: string
+      email:
+        example: bla@bla.com
+        type: string
+      role_id:
+        example: 1
+        type: integer
+      updated_at:
+        example: "2021-03-13T07:15:11+07:00"
+        type: string
+      user_id:
+        example: 1
+        type: integer
+      username:
+        example: your username
+        type: string
+    type: object
+  usersModel.ResLogin:
+    properties:
+      role_id:
+        example: 1
+        type: integer
+      token:
+        example: asvvasvdavvdhavbhdhabvhdas.sabfhbhasb.ajsfbhbashb
+        type: string
+      user_id:
+        example: 1
+        type: integer
+    type: object
+  usersModel.Roles:
+    properties:
+      role_id:
+        example: 1
+        type: integer
+      role_name:
+        example: Admin
+        type: string
+    type: object
+host: localhost:12345
 info:
   contact:
     email: m.nurbasari@gmail.com
@@ -7,7 +242,410 @@ info:
   termsOfService: http://swagger.io/terms/
   title: Manajemen Komponen API
   version: 0.0.1
-paths: {}
+paths:
+  /user/change-password:
+    put:
+      consumes:
+      - application/json
+      description: Change Password
+      parameters:
+      - description: TOKEN , please type Bearer before ApiKeyAuth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: userid
+        in: header
+        name: userid
+        required: true
+        type: string
+      - description: json object update password
+        in: body
+        name: request_change_password
+        schema:
+          $ref: '#/definitions/usersModel.ReqChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usersDTO.ResChangePassword'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/globalDTO.BadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/globalDTO.UnAuthorized'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/globalDTO.ForbiddenRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/globalDTO.InternalServerErr'
+      summary: Change Password
+      tags:
+      - USER
+  /user/delete/{user_id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete user by ID
+      parameters:
+      - description: TOKEN , please type Bearer before ApiKeyAuth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: userid
+        in: header
+        name: userid
+        required: true
+        type: string
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usersDTO.ResDeleteUserByID'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/globalDTO.BadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/globalDTO.UnAuthorized'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/globalDTO.ForbiddenRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/globalDTO.InternalServerErr'
+      summary: delete user by ID
+      tags:
+      - USER
+  /user/list:
+    get:
+      consumes:
+      - application/json
+      description: get All Data Users
+      parameters:
+      - description: TOKEN , please type Bearer before ApiKeyAuth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: userid
+        in: header
+        name: userid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usersDTO.ResGetAllUsers'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/globalDTO.BadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/globalDTO.UnAuthorized'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/globalDTO.ForbiddenRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/globalDTO.InternalServerErr'
+      summary: get All Data Users
+      tags:
+      - USER
+  /user/list/{user_id}:
+    get:
+      consumes:
+      - application/json
+      description: get User by id
+      parameters:
+      - description: TOKEN , please type Bearer before ApiKeyAuth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: userid
+        in: header
+        name: userid
+        required: true
+        type: string
+      - description: user_id
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usersDTO.ResGetUserByID'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/globalDTO.BadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/globalDTO.UnAuthorized'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/globalDTO.ForbiddenRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/globalDTO.InternalServerErr'
+      summary: get User by id
+      tags:
+      - USER
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Login to system
+      parameters:
+      - description: json object email pwd
+        in: body
+        name: request_email_pwd
+        schema:
+          $ref: '#/definitions/usersDTO.ReqLoginDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usersDTO.ResLoginResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/globalDTO.BadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/globalDTO.UnAuthorized'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/globalDTO.ForbiddenRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/globalDTO.InternalServerErr'
+      summary: Login Users, please try using POSTMAN, Just ONLY THIS METHOD
+      tags:
+      - AUTH
+  /user/role:
+    get:
+      consumes:
+      - application/json
+      description: get roles
+      parameters:
+      - description: TOKEN , please type Bearer before ApiKeyAuth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: userid
+        in: header
+        name: userid
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usersDTO.ResGetRoles'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/globalDTO.BadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/globalDTO.UnAuthorized'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/globalDTO.ForbiddenRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/globalDTO.InternalServerErr'
+      summary: get roles
+      tags:
+      - USER
+  /user/role/{role_id}:
+    get:
+      consumes:
+      - application/json
+      description: get roles by id
+      parameters:
+      - description: TOKEN , please type Bearer before ApiKeyAuth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: userid
+        in: header
+        name: userid
+        required: true
+        type: string
+      - description: role_id
+        in: path
+        name: role_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usersDTO.ResGetRoleByID'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/globalDTO.BadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/globalDTO.UnAuthorized'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/globalDTO.ForbiddenRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/globalDTO.InternalServerErr'
+      summary: get roles by id
+      tags:
+      - USER
+  /user/save:
+    post:
+      consumes:
+      - application/json
+      description: Create an user
+      parameters:
+      - description: TOKEN , please type Bearer before ApiKeyAuth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: userid
+        in: header
+        name: userid
+        required: true
+        type: string
+      - description: json object insert user
+        in: body
+        name: request_insert
+        schema:
+          $ref: '#/definitions/usersModel.ReqInsertUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usersDTO.ResInsertUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/globalDTO.BadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/globalDTO.UnAuthorized'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/globalDTO.ForbiddenRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/globalDTO.InternalServerErr'
+      summary: Create an user
+      tags:
+      - USER
+  /user/update:
+    put:
+      consumes:
+      - application/json
+      description: update user
+      parameters:
+      - description: TOKEN , please type Bearer before ApiKeyAuth
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: userid
+        in: header
+        name: userid
+        required: true
+        type: string
+      - description: json object update user
+        in: body
+        name: request_update
+        schema:
+          $ref: '#/definitions/usersModel.ReqUpdateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/usersDTO.ResUpdateUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/globalDTO.BadRequest'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/globalDTO.UnAuthorized'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/globalDTO.ForbiddenRes'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/globalDTO.InternalServerErr'
+      summary: update user
+      tags:
+      - USER
 securityDefinitions:
   ApiKeyAuth:
     in: header

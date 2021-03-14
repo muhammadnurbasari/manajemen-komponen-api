@@ -13,7 +13,7 @@ import (
 // @contact.name Muhammad nur basari
 // @contact.email m.nurbasari@gmail.com
 
-// @host localhost:8080
+// @host localhost:12345
 // @BasePath
 // @query.collection.format multi
 
