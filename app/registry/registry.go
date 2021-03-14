@@ -17,7 +17,7 @@ import (
 )
 
 type AppRegistry struct {
-	conn       *gorm.DB
+	Conn       *gorm.DB
 	serverHttp *appServer.HttpHandler
 }
 
@@ -100,12 +100,12 @@ func (reg *AppRegistry) StartServer() {
 		return
 	}
 
-	reg.conn = conn
+	reg.Conn = conn
 
 	//close connection
 	defer func() {
 		log.Info().Msg("Close connection . . .")
-		errConnClose := reg.conn.Close()
+		errConnClose := reg.Conn.Close()
 		if errConnClose != nil {
 			log.Error().Msg("Service manajemen-komponen-api.errConnClose : " + errConnClose.Error())
 		}
